@@ -1,45 +1,51 @@
 IntDict count;
 String words[];
-int start_Xpos = 30; 
-int end_Xpos = 400;
-int start_Ypos;
 ArrayList<TextBoid> boids;
-  int currentX = 50;
-  int currentY = 20;
+String[] lines;
 
 void setup() {
-  boids  = new ArrayList<TextBoid>();
   size(600, 600);
-  count = new IntDict();
+  boids  = new ArrayList<TextBoid>();
+  count = new IntDict();    //initialize the IntDict class that is build-in 
   splitToWords();
-  add_boid();
+  add_boids();
 }
 
 
 
 void draw() {
   background(0);
-  // wordToCount(words);
-  //display();
-  //text("test",255,250);
-  //for(TextBoid b: boids){
-  // b.update();
-  // b.display();
-  //}
-  display();
+  
+  for (TextBoid b : boids) {
+    b.display();
+  }
+  
+  if (mouseX>width/2) {
+    for (TextBoid b : boids) {
+      b.update();
+      PVector force = new PVector(random(-0.01,0.01),random(-0.01,0.01));
+      
+      b.addForce(force);
+    }
+  }
 }
 
 
-void splitToWords()
-{
-  //TODO how about some try catch
-  String[] lines = loadStrings("text.txt");
-  String allthetext = join(lines, " ");
-  words = splitTokens(allthetext, " ,.:;!");
+void splitToWords() {
+  try {
+    lines = loadStrings("text.txt");  //try to load the data,  the text file should be in the data folder
+  }
+  catch(Exception e) {
+    println(e);
+    lines = null;
+  } 
+  if (lines != null) {
+    String allthetext = join(lines, " ");
+    words = splitTokens(allthetext, " ,.:;/'()[]!");            //take out the unnecessary characters. 
+  }
 }
 
 void wordToCount(String[] words_Array) {
-
   for (int i = 0; i<words_Array.length; i ++) {
     count.increment(words_Array[i].toLowerCase());
   }
@@ -57,23 +63,21 @@ void add_boid() {
   }
 }
 
-
-void display() {
-
-  int i = 0;
-  PVector pos = new PVector(0, 0);
-  while (currentY<height-50) {
-    while (currentX<width-50) {
-      text(words[i], currentX, currentY);
-      currentX +=textWidth(words[i]);
+void add_boids() {
+  int currentX = 50;         //setting the starting X-point 
+  int currentY = 50;         //setting the sarting Y-point
+  int i = 0;                    
+  while (currentY<height-100) {
+    while (currentX<width-100 && i<=words.length-1) {
+      PVector loc = new PVector(currentX, currentY);
+      PVector vel = new PVector(0,0);
+      boids.add(new TextBoid(words[i], loc, vel, 255));    
+      currentX += textWidth(words[i]);                  //calculate the width of each word
+      currentX+= textWidth(" ");
       i++;
-      if (currentX>width-50) {
-        println(currentX);
-        currentX = 50;
-        currentY+=20;
-
-        // constrain(i,0,150);
-      }
+      println(i);
     }
+    currentX = 50;
+    currentY+=20;
   }
 }
