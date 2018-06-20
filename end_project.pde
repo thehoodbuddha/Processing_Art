@@ -1,83 +1,76 @@
 IntDict count;
 String words[];
-ArrayList<TextBoid> boids;
+TextCluster tc;
 String[] lines;
 
+ArrayList<TextBoid> tbs;
+
+
+
+PVector pos1, pos2;
+PVector vel1, vel2;
+color c1, c2;
+
+TextBoid tb1, tb2;
 void setup() {
   size(600, 600);
-  boids  = new ArrayList<TextBoid>();
+  smooth(4);
+  tc = new TextCluster(); 
   count = new IntDict();    //initialize the IntDict class that is build-in 
-  splitToWords();
-  add_boids();
+  
+  
+  //splitToWords();
+
+  pos1 = new PVector(width/2, height/2);
+  pos2 = new PVector(width/2, height*0.25);
+  vel1 = new PVector(1, 0.5);
+  vel2 = new PVector(0, 5);
+  c1 = color(255, 0, 0);
+  c2 = color(0, 0, 255);
+  tb1 = new TextBoid("lorem", pos1, vel1, c1);
+  tb2 = new TextBoid("ipsum", pos2, vel2, c2);
+
+
+  /*
+  tbs = new ArrayList<TextBoid>();
+   
+   for (int i = 0; i<10; i++) {
+   PVector loc = new PVector(random(width), random(height));
+   PVector vel = new PVector(random(-1, 1), random(-1, 1));
+   tbs.add(new TextBoid("text", loc, vel, 255));
+   }
+   */
 }
 
 
 
 void draw() {
   background(0);
+
+  //tb1.update();
+  tb2.update();
   
+  boolean cc = tb2.collisionCheck(tb1); //cc: collision check
+  if (cc == true)
+    println("collision");
+  
+  tb1.display();
+  tb2.display();
+
+
+
+  /*
   for (TextBoid b : boids) {
-    b.display();
-  }
-  
-  if (mouseX>width/2) {
-    for (TextBoid b : boids) {
-      b.update();
-      PVector force = new PVector(random(-0.01,0.01),random(-0.01,0.01));
-      
-      b.addForce(force);
-    }
-  }
-}
-
-
-void splitToWords() {
-  try {
-    lines = loadStrings("text.txt");  //try to load the data,  the text file should be in the data folder
-  }
-  catch(Exception e) {
-    println(e);
-    lines = null;
-  } 
-  if (lines != null) {
-    String allthetext = join(lines, " ");
-    words = splitTokens(allthetext, " ,.:;/'()[]!");            //take out the unnecessary characters. 
-  }
-}
-
-void wordToCount(String[] words_Array) {
-  for (int i = 0; i<words_Array.length; i ++) {
-    count.increment(words_Array[i].toLowerCase());
-  }
-  String[] word= count.keyArray();
-  for ( int i = 0; i<word.length; i++) {
-    int test =count.get(word[i]);
-    println(word[i], test);
-  }
-}
-void add_boid() {
-  for (int i = 0; i<words.length; i++) {
-    PVector loc = new PVector(random(width), random(height));
-    PVector vel = new PVector(random(-1, 1), random(-1, 1));
-    boids.add(new TextBoid(words[i], loc, vel, 255));
-  }
-}
-
-void add_boids() {
-  int currentX = 50;         //setting the starting X-point 
-  int currentY = 50;         //setting the sarting Y-point
-  int i = 0;                    
-  while (currentY<height-100) {
-    while (currentX<width-100 && i<=words.length-1) {
-      PVector loc = new PVector(currentX, currentY);
-      PVector vel = new PVector(0,0);
-      boids.add(new TextBoid(words[i], loc, vel, 255));    
-      currentX += textWidth(words[i]);                  //calculate the width of each word
-      currentX+= textWidth(" ");
-      i++;
-      println(i);
-    }
-    currentX = 50;
-    currentY+=20;
-  }
+   b.display();
+   }
+   
+   if (mouseX>width/2) {
+   for (TextBoid b : boids) {
+   b.update();
+   PVector force = new PVector(random(-0.01,0.01),random(-0.01,0.01));
+   
+   b.addForce(force);
+   }
+   }
+   */
 }
