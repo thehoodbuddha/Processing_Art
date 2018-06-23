@@ -242,6 +242,10 @@ Boolean fly(){
     return flockMode;
   }
 
+  void changeMode(boolean newMode){
+    flockMode = newMode;
+  }
+
   PVector getPosition()
   {
     return position;

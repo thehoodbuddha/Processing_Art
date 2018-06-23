@@ -147,7 +147,8 @@ void keyPressed()
       lf.addLetterBoid(lb);
     } else if (key == lb.getChar() && lb.getFlockMode() == true) //stop flocking
     {
-      
+      lb.updateColor(255);
+      lf.removeLetterBoid(lb);
     }
   }
 }
