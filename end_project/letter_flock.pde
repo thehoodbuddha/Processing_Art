@@ -17,7 +17,7 @@ class LetterFlock
   
 
   void addLetterBoid(LetterBoid lb) {
-    lb.initFlockSpeed();
+    lb.changeMode(true);
     letterBoids.add(lb);
   }
   

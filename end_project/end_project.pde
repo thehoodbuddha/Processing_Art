@@ -134,7 +134,7 @@ void keyPressed()
   color[] matrixColors;
   matrixColors = new color[3];
   matrixColors[0] = color(0, 143, 17);
-  matrixColors[1] = color(0, 59, 0);
+  matrixColors[1] = color(32,194,14);
   matrixColors[2] = color(0, 255, 65);
 
   int indice = int(random(0, 3));

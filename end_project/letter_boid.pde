@@ -48,6 +48,8 @@ class LetterBoid
     } else
     {
       velocity.limit(maxspeed);
+      theta =  velocity.heading2D(); //TODO deprecated, update to new version
+      
       position.add(velocity);
       // Reset accelertion to 0 each cycle
       acceleration.mult(0);
@@ -196,12 +198,6 @@ class LetterBoid
   }
 
 
-  void initFlockSpeed()
-  {
-    flockMode = true;
-    velocity.x = random(-1, 1);
-    velocity.y = random(-1, 1);
-  }
  void click(PVector loc) {                     //to check whether a letter is clicked
     float d = PVector.dist(loc, position);
     if (d < r) {
