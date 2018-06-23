@@ -19,8 +19,11 @@ class TextBoid
     velocity = _velocity;
     position = _position; 
     delta = 0.16;
-    c = _c;
     radius = 10;
+    opacity = 0;
+    
+    c = _c;
+    
   }
   void update()
   {
@@ -36,7 +39,8 @@ class TextBoid
     if (wordMode)
     {
       textSize(12);
-      fill(c);
+      color alphaColor = color(c, opacity);
+      fill(alphaColor);
       pushMatrix();
       translate(position.x, position.y);
       rotate(theta);
@@ -118,6 +122,12 @@ class TextBoid
     return remove;
   }
   
+  void addOpacity(float op)
+  {
+    opacity += op;
+    if (opacity > 255)
+      opacity = 255;
+  }
 
   PVector getPosition()
   {

@@ -21,6 +21,11 @@ class LetterFlock
     letterBoids.add(lb);
   }
   
+  void removeLetterBoid(LetterBoid lb) {
+    lb.changeMode(false);
+    letterBoids.remove(lb);
+  }
+  
   void printCount()
   {
     println(letterBoids.size());

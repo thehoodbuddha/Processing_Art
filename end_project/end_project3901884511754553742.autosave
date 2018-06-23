@@ -5,7 +5,6 @@ String[] lines;
 
 ArrayList<TextBoid> tbs;
 ArrayList<LetterBoid> lbs;
-ArrayList<Particles> ps;
 LetterFlock lf;
 
 PVector pos1, pos2;
@@ -35,7 +34,6 @@ void setup() {
 
   tbs = new ArrayList<TextBoid>();
   lbs = new ArrayList<LetterBoid>();
-  ps = new ArrayList<Particles>();
   /* 
    for (int i = 0; i<10; i++) {
    PVector loc = new PVector(random(width), random(height));
@@ -52,7 +50,7 @@ void setup() {
 
 void draw() {
   background(0);
-  lf.run();
+
   //tb1.update();
   //tb2.update();
 
@@ -101,53 +99,36 @@ void draw() {
   {
     lb.update();
     lb.display();
-    PVector loc  = new PVector(mouseX, mouseY);
-    lb.selected(loc);
-
-    if (lb.fly()) {
-      PVector test = lb.getPosition();
-
-      PVector test2 = new PVector(random(-1, 1), random(-1, 1));
-      ps.add(new Particles(test, test2, 2));
-    }
   }
+  lf.run();
+  //lf.printCount();
+  println(frameRate);
 }
 
-
-
-void mousePressed() {
-  for (LetterBoid lb : lbs)
-  {
-    PVector loc  = new PVector(mouseX, mouseY);
-    lb.click(loc);
-  }
-}
-void mouseReleased() {
-  for (LetterBoid lb : lbs)
-  {
-    lb.returnClick();
-  }
-}
 void keyPressed()
 {
   //color c = color(random(0,255),random(0,255),random(0,255));
   color[] matrixColors;
   matrixColors = new color[3];
-  matrixColors[0] = color(0, 143, 17);
-  matrixColors[1] = color(0, 59, 0);
+  matrixColors[0] = color(0,143,17);
+  matrixColors[1] = color(32,194,14);
   matrixColors[2] = color(0, 255, 65);
-
-  int indice = int(random(0, 3));
-
+  
+  int indice = int(random(0,3));
+  
   for (LetterBoid lb : lbs)
   {
-    if (key == lb.getChar() && lb.getFlockMode() == false)
+    if (key == lb.getChar() && lb.getFlockMode() == false) //start flocking
     {
       lb.updateColor(matrixColors[indice]);
       lf.addLetterBoid(lb);
-    } else if (key == lb.getChar() && lb.getFlockMode() == true) //stop flocking
-    {
-      
     }
+    else if (key == lb.getChar() && lb.getFlockMode() == true) //stop flocking
+    {
+      lb.updateColor(color(255));
+      lf.removeLetterBoid(lb);
+    }
+      
   }
+  
 }
