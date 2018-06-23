@@ -22,6 +22,7 @@ class LetterBoid
   {
 
     velocity.add(acceleration);
+    velocity.mult(0.98);
     theta =  velocity.heading2D(); //TODO deprecated, update to new version
     position.add(velocity.copy().mult(delta));
   }
@@ -35,6 +36,7 @@ class LetterBoid
     text(text, 0, 0);
     popMatrix();
   }
+
 
   
   //become subparticles
