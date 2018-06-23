@@ -10,7 +10,10 @@ class LetterBoid
   float r; //we model each word as circles for now
 
   boolean flockMode;
+  boolean clicked;
 
+  boolean flyMode;
+  PVector prevposition;
   float maxforce;
   float maxspeed;
 
@@ -23,7 +26,7 @@ class LetterBoid
     position = _position; 
     delta = 0.16;
     col = _col;
-    r = 3;
+    r = 5;
 
     //here onwards is about flocking
     flockMode = false;
@@ -199,7 +202,34 @@ class LetterBoid
     velocity.x = random(-1, 1);
     velocity.y = random(-1, 1);
   }
+ void click(PVector loc) {                     //to check whether a letter is clicked
+    float d = PVector.dist(loc, position);
+    if (d < r) {
+      clicked = true;
+      prevposition = loc;
+    }
+  }
+  void returnClick() {
+    if (clicked) {
+      clicked = false; 
+      PVector direction = PVector.sub(prevposition, position);
+      velocity.add(direction);
+      flyMode= true;
+    }
+  }
+  
+Boolean fly(){
+ return flyMode;
+}
 
+  void  selected(PVector loc) {
+    if (clicked) {
+      flyMode = false;
+      stroke(255);
+      line(prevposition.x, prevposition.y, loc.x, loc.y);
+      position = loc;
+    }
+  } 
 
   //become subparticles
 
