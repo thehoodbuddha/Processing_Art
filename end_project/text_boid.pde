@@ -51,9 +51,32 @@ class TextBoid
     acceleration.limit(2);
   }
 
-  boolean collisionCheck(ArrayList<TextBoid> other)
+  /*
+  void addRotation(float deltaTheta)
   {
-    boolean collided = false;
+    theta += deltaTheta;
+  }
+  */
+  
+  void addVelocity(PVector velocity)
+  {
+  
+  }
+
+  int collisionCheck(ArrayList<TextBoid> other)
+  {
+    int collisionID = -1;
+    
+    for (int i = 0; i < other.size(); i++) {
+      float dist = PVector.dist(position, other.get(i).position);
+      //PVector distance = position.copy().sub(other.position);
+      if ((dist>0) && dist <= 2 * radius)
+      {
+        collisionID = i;
+      }
+    }
+    
+    /*
     for (TextBoid tb : other ) {
       float dist = PVector.dist(position, tb.position);
       //PVector distance = position.copy().sub(other.position);
@@ -62,7 +85,8 @@ class TextBoid
         collided = true;
       }
     }
-    return collided;
+    */
+    return collisionID;
   }
   void borders() {
     if (position.x>width-radius||position.x<0+radius)velocity = new PVector(velocity.x*-1, velocity.y);
@@ -74,7 +98,6 @@ class TextBoid
   {
     if (wordMode)
     {
-      println("exploding words!");
       for (int i = 0; i < text.length(); i++)
       {
         PVector lpos = position.copy().add(random(-5, 5), random(-5, 5));

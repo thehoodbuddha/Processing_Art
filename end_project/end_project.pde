@@ -5,6 +5,7 @@ String[] lines;
 
 ArrayList<TextBoid> tbs;
 ArrayList<LetterBoid> lbs;
+LetterFlock lf;
 
 PVector pos1, pos2;
 PVector vel1, vel2;
@@ -12,11 +13,12 @@ color c1, c2;
 
 TextBoid tb1, tb2;
 void setup() {
-  size(600, 600);
+  fullScreen();
   background(255);
   smooth(4);
   tc = new TextCluster("text.txt");
   count = new IntDict();    //initialize the IntDict class that is build-in 
+  lf = new LetterFlock();
   //splitToWords();
 
   //  pos1 = new PVector(width/2, height/2);
@@ -68,31 +70,59 @@ void draw() {
     b.display();
     b.update();
     b.borders();
-    PVector force = new PVector(random(-0.001, 0.001), random(-0.001, 0.001));
-
+    PVector force = new PVector(random(-0.01, 0.01), random(-0.01, 0.01));
+    force.mult(2);
     b.addForce(force);
+
     //b.explodeToLetters();
     b.display();
   }
 
-
   if (mouseX>width/2) {
     for (TextBoid b : tbs) {
-      if (b.collisionCheck(tbs)) {
+      int collisionID = b.collisionCheck(tbs);
+      if (collisionID > 0) {
 
         b.explodeToLetters(lbs);
-        //println("trying to remove");
-        //tbs.remove(0);
+        tbs.get(collisionID).explodeToLetters(lbs);
+        //println(collisionID);
+        //remove both collided items
+        tbs.remove(b);
+        tbs.remove(tbs.get(collisionID-1)); //since b is removed every index is 1 less
+        break;
         //println("success!");
-        
       }
     }
-    
-    
   }
   for (LetterBoid lb : lbs)
+  {
+    lb.update();
+    lb.display();
+  }
+  lf.run();
+  //lf.printCount();
+  println(frameRate);
+}
+
+void keyPressed()
+{
+  //color c = color(random(0,255),random(0,255),random(0,255));
+  color[] matrixColors;
+  matrixColors = new color[3];
+  matrixColors[0] = color(0,143,17);
+  matrixColors[1] = color(0, 59, 0);
+  matrixColors[2] = color(0, 255, 65);
+  
+  int indice = int(random(0,3));
+  
+  for (LetterBoid lb : lbs)
+  {
+    if (key == lb.getChar() && lb.getFlockMode() == false)
     {
-      lb.update();
-      lb.display();
+      lb.updateColor(matrixColors[indice]);
+      lf.addLetterBoid(lb);
     }
+      
+  }
+  
 }

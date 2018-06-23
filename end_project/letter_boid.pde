@@ -23,7 +23,7 @@ class LetterBoid
     position = _position; 
     delta = 0.16;
     col = _col;
-    r = 10;
+    r = 3;
 
     //here onwards is about flocking
     flockMode = false;
@@ -36,9 +36,19 @@ class LetterBoid
   {
 
     velocity.add(acceleration);
-    velocity.mult(0.98);
-    theta =  velocity.heading2D(); //TODO deprecated, update to new version
-    position.add(velocity.copy().mult(delta));
+    if (!flockMode)
+    {
+      velocity.mult(0.99);
+
+      theta =  velocity.heading2D(); //TODO deprecated, update to new version
+      position.add(velocity.copy().mult(delta));
+    } else
+    {
+      velocity.limit(maxspeed);
+      position.add(velocity);
+      // Reset accelertion to 0 each cycle
+      acceleration.mult(0);
+    }
   }
   void display()
   { 
@@ -52,12 +62,12 @@ class LetterBoid
   }
 
 
-/*
+
   void run(ArrayList<LetterBoid> boids) {
     flock(boids);
     update();
     borders();
-    display();
+    //display();
   }  
 
   void applyForce(PVector force)
@@ -181,12 +191,26 @@ class LetterBoid
       return new PVector(0, 0);
     }
   }
-  
-*/
 
+
+  void initFlockSpeed()
+  {
+    flockMode = true;
+    velocity.x = random(-1, 1);
+    velocity.y = random(-1, 1);
+  }
 
 
   //become subparticles
+
+  void updateColor(color newCol)
+  {
+    col = newCol;
+  }
+
+  boolean getFlockMode(){
+    return flockMode;
+  }
 
   PVector getPosition()
   {

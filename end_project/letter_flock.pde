@@ -7,16 +7,24 @@ class LetterFlock
   }
 
 
-/*
+
   void run(){
     for (LetterBoid lb : letterBoids) {
       lb.run(letterBoids);
     }
   }
+  
+  
 
   void addLetterBoid(LetterBoid lb) {
+    lb.initFlockSpeed();
     letterBoids.add(lb);
   }
-*/
+  
+  void printCount()
+  {
+    println(letterBoids.size());
+  }
+
 }
   
