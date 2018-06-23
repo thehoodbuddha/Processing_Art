@@ -5,20 +5,24 @@ class Particles {
   int radius;
   int c = 255;
   int opacity = 255;
-  Particles(PVector _location,PVector _velocity, PVector _acceleration, int _radius) {
+  float delta = 0.16;
+  Particles(PVector _location,PVector _velocity,  int _radius) {
     location= _location;
     radius =_radius;
     velocity =_velocity;
-    acceleration = _acceleration;
+   
   }
 
   void display() {
     fill(c,opacity);
-    ellipse(location.x, location.y, radius*2, radius*2);
+    pushMatrix();
+    translate(location.x,location.y);
+    ellipse(0, 0, radius*2, radius*2);
+    popMatrix();
   }
   void update(){
-   location.add(velocity);
-   velocity.add(acceleration);
+   location.add(velocity.copy().mult(delta));
+   //velocity.add(acceleration);
    opacity -=0.5;
   }
   Boolean check(){
