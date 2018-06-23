@@ -13,7 +13,7 @@ color c1, c2;
 
 TextBoid tb1, tb2;
 void setup() {
-  fullScreen();
+  fullScreen(P2D);
   background(255);
   smooth(4);
   tc = new TextCluster("text.txt");
@@ -72,8 +72,9 @@ void draw() {
     b.borders();
     PVector force = new PVector(random(-0.01, 0.01), random(-0.01, 0.01));
     force.mult(2);
+    PVector tpos = b.getPosition();
     b.addForce(force);
-
+    b.addOpacity(noise(tpos.x, tpos.y));
     //b.explodeToLetters();
     b.display();
   }
@@ -117,10 +118,14 @@ void keyPressed()
   
   for (LetterBoid lb : lbs)
   {
-    if (key == lb.getChar() && lb.getFlockMode() == false)
+    if (key == lb.getChar() && lb.getFlockMode() == false) //start flocking
     {
       lb.updateColor(matrixColors[indice]);
       lf.addLetterBoid(lb);
+    }
+    else if (key == lb.getChar() && lb.getFlockMode() == true) //stop flocking
+    {
+    
     }
       
   }
