@@ -1,16 +1,10 @@
 class TextCluster
 {
-  ArrayList<TextBoid> boids;
-  TextCluster()
+  String url;
+
+  TextCluster(String _url)
   {
-    boids = new ArrayList<TextBoid>();
-  }
-  void add_boid() {
-    for (int i = 0; i<words.length; i++) {
-      PVector loc = new PVector(random(width), random(height));
-      PVector vel = new PVector(random(-1, 1), random(-1, 1));
-      boids.add(new TextBoid(words[i], loc, vel, 255));
-    }
+    url = _url;
   }
 
   void add_boids() {
@@ -21,36 +15,20 @@ class TextCluster
       while (currentX<width-100 && i<=words.length-1) {
         PVector loc = new PVector(currentX, currentY);
         PVector vel = new PVector(0, 0);
-        boids.add(new TextBoid(words[i], loc, vel, 255));    
+        tbs.add(new TextBoid(words[i], loc, vel, 255));    
         currentX += textWidth(words[i]);                  //calculate the width of each word
         currentX+= textWidth(" ");
         i++;
-        println(i);
       }
       currentX = 50;
       currentY+=20;
     }
   }
 
-  void update()
-  {
-    for (TextBoid tb : boids)
-    {
-      tb.update();
-    }
-  }
+  void splitToWords() {
 
-  void display()
-  {
-    for (TextBoid tb : boids)
-    {
-      tb.update();
-    }
-  }
-
-  void splitToWords(String[] words) {
     try {
-      lines = loadStrings("text.txt");  //try to load the data,  the text file should be in the data folder
+      lines = loadStrings(url);  //try to load the data,  the text file should be in the data folder
     }
     catch(Exception e) {
       println(e);
