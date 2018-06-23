@@ -10,7 +10,7 @@ class TextBoid
   float radius; //we model each word as circles for now
   boolean wordMode; //the mode, 1 is word mode, 0 is letters mode
   float opacity;
-  
+
   TextBoid(String _text, PVector _position, PVector _velocity, color _c)
   {
     wordMode = true;
@@ -21,9 +21,8 @@ class TextBoid
     delta = 0.16;
     radius = 10;
     opacity = 0;
-    
+
     c = _c;
-    
   }
   void update()
   {
@@ -32,7 +31,7 @@ class TextBoid
       velocity.add(acceleration);
       theta =  velocity.heading2D(); //TODO deprecated, update to new version
       position.add(velocity.copy().mult(delta));
-    } 
+    }
   }
   void display()
   { 
@@ -46,9 +45,7 @@ class TextBoid
       rotate(theta);
       text(text, 0, 0);
       popMatrix();
-
     }
-    
   }
   void addForce(PVector Force) {
     acceleration.add(Force.mult(delta));  
@@ -57,39 +54,40 @@ class TextBoid
 
   /*
   void addRotation(float deltaTheta)
-  {
-    theta += deltaTheta;
-  }
-  */
-  
+   {
+   theta += deltaTheta;
+   }
+   */
+
   void addVelocity(PVector velocity)
   {
-  
   }
 
   int collisionCheck(ArrayList<TextBoid> other)
   {
     int collisionID = -1;
-    
+
     for (int i = 0; i < other.size(); i++) {
       float dist = PVector.dist(position, other.get(i).position);
       //PVector distance = position.copy().sub(other.position);
       if ((dist>0) && dist <= 2 * radius)
       {
+      
+      
         collisionID = i;
       }
     }
-    
+
     /*
     for (TextBoid tb : other ) {
-      float dist = PVector.dist(position, tb.position);
-      //PVector distance = position.copy().sub(other.position);
-      if ((dist>0) && dist <= 2 * radius)
-      {
-        collided = true;
-      }
-    }
-    */
+     float dist = PVector.dist(position, tb.position);
+     //PVector distance = position.copy().sub(other.position);
+     if ((dist>0) && dist <= 2 * radius)
+     {
+     collided = true;
+     }
+     }
+     */
     return collisionID;
   }
   void borders() {
@@ -112,16 +110,16 @@ class TextBoid
       radius = 0;
     }
   }
-  
-  boolean fade(float amount){
+
+  boolean fade(float amount) {
     boolean remove = false;
     opacity-=amount;
-    if(amount<=0){
-     remove = true; 
+    if (amount<=0) {
+      remove = true;
     }
     return remove;
   }
-  
+
   void addOpacity(float op)
   {
     opacity += op;

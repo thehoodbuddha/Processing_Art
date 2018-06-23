@@ -214,8 +214,8 @@ class LetterBoid
     }
   }
   
-Boolean fly(){
- return flyMode;
+Boolean clicked(){
+ return clicked;
 }
 
   void  selected(PVector loc) {

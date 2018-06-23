@@ -40,14 +40,4 @@ class TextCluster
     }
   }
 
-  void wordToCount(String[] words_Array) {
-    for (int i = 0; i<words_Array.length; i ++) {
-      count.increment(words_Array[i].toLowerCase());
-    }
-    String[] word= count.keyArray();
-    for ( int i = 0; i<word.length; i++) {
-      int test =count.get(word[i]);
-      println(word[i], test);
-    }
-  }
 }

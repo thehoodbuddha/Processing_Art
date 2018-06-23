@@ -6,18 +6,24 @@ class Particles {
   int c = 255;
   int opacity = 255;
   float delta = 0.16;
-  Particles(PVector _location,PVector _velocity,  int _radius) {
+  String str; 
+  int i;
+  
+  Particles(PVector _location,PVector _velocity,  int _radius, int _char) {
+    str = "./';8&";
+    i = _char;
     location= _location;
     radius =_radius;
     velocity =_velocity;
-   
   }
 
   void display() {
     fill(c,opacity);
+    noStroke();
     pushMatrix();
+
     translate(location.x,location.y);
-    ellipse(0, 0, radius*2, radius*2);
+    text(str.charAt(i),0,0);
     popMatrix();
   }
   void update(){
