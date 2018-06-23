@@ -9,7 +9,8 @@ class TextBoid
   float theta;
   float radius; //we model each word as circles for now
   boolean wordMode; //the mode, 1 is word mode, 0 is letters mode
-
+  float opacity;
+  
   LetterBoid[] lbs;
   TextBoid(String _text, PVector _position, PVector _velocity, color _c)
   {
@@ -29,6 +30,12 @@ class TextBoid
       velocity.add(acceleration);
       theta =  velocity.heading2D(); //TODO deprecated, update to new version
       position.add(velocity.copy().mult(delta));
+    } else
+    {
+      for (LetterBoid lit : lbs)
+      {
+        lit.update();
+      }
     }
   }
   void display()
@@ -36,7 +43,7 @@ class TextBoid
     if (wordMode)
     {
       textSize(12);
-      fill(c);
+      fill(c,opacity);
       pushMatrix();
       translate(position.x, position.y);
       rotate(theta);
@@ -46,48 +53,59 @@ class TextBoid
     {
       for (LetterBoid lit : lbs)
       {
-        textSize(12);
-        fill(c);
-        PVector lpos = lit.getPosition();
-        pushMatrix();
-
-        translate(lpos.x, lpos.y);
-        rotate(lit.getTheta());
-        text(lit.getChar(), 0, 0);
-        popMatrix();
+        lit.display();
       }
     }
   }
-
   void addForce(PVector Force) {
     acceleration.add(Force);  
     acceleration.limit(2);
   }
 
-  boolean collisionCheck(TextBoid other)
+  boolean collisionCheck(ArrayList<TextBoid> other)
   {
     boolean collided = false;
-
-    PVector distance = position.copy().sub(other.getPosition());
-    if (distance.mag() <= 2 * radius)
-    {
-      collided = true;
-      wordMode = false;
+    for (TextBoid tb : other ) {
+      float dist = PVector.dist(position, tb.position);
+      //PVector distance = position.copy().sub(other.position);
+      if ((dist>0) && dist <= 2 * radius)
+      {
+        collided = true;
+      }
     }
     return collided;
+  }
+  void borders() {
+    if (position.x>width-radius||position.x<0+radius)velocity = new PVector(velocity.x*-1, velocity.y);
+    if (position.y>height-radius||position.y<0+radius)velocity = new PVector(velocity.x, velocity.y*-1);
   }
 
   //become subparticles
   void explodeToLetters()
   {
-    lbs = new LetterBoid[text.length()];
-    for (int i = 0; i < text.length(); i++)
+    if (wordMode)
     {
-      PVector lpos = position.copy().add(random(-5, 5), random(-5, 5));
-      PVector lv = velocity.copy().rotate(random(0, TWO_PI));
-      lbs[0] = new LetterBoid(text.charAt(i), lpos, lv, c);
+      println("exploding words!");
+      lbs = new LetterBoid[text.length()];
+      for (int i = 0; i < text.length(); i++)
+      {
+        PVector lpos = position.copy().add(random(-5, 5), random(-5, 5));
+        PVector lv = velocity.copy().rotate(random(0, TWO_PI));
+        lbs[i] = new LetterBoid(text.charAt(i), lpos, lv, c);
+      }
+      wordMode = false;
     }
   }
+  
+  boolean fade(float amount){
+    boolean remove = false;
+    opacity-=amount;
+    if(amount<=0){
+     remove = true; 
+    }
+    return remove;
+  }
+  
 
   PVector getPosition()
   {
