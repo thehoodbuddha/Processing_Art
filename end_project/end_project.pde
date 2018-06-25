@@ -51,22 +51,30 @@ void initialize() {                                    //initilialize function c
 }
 
 void Text_Run() {
-  for (TextBoid b : tbs) {              //loop through the arraylist, display everything
+  for (TextBoid b : tbs) {
     b.display();
     b.update();
-    b.borders();                               //check the boids for the border to bounce
-    PVector force = new PVector(random(-0.01, 0.01), random(-0.01, 0.01));          //Create a starting force that will them move                                                        
-    PVector tpos = b.getPosition();       //get the currrent position                                          
-    b.addForce(force);
-    b.addOpacity(noise(tpos.x, tpos.y));         //let the words slowly fade in
-    b.display();                     //display all the words. 
+    b.borders();
+    PVector tpos = b.getPosition();
+    //b.addForce(force);
+    b.addOpacity(noise(tpos.x, tpos.y));
+    //b.explodeToLetters();
+    b.display();
   }
 
+  if (mouseX >= width/3 && mouseX <= 2*(width/3))
+  {
+    for (TextBoid b : tbs) {
 
-  if (mouseX>width/2) {
+      PVector force = new PVector(random(-0.01, 0.01), random(-0.01, 0.01));
+      force.mult(2);
+      b.addForce(force);
+    }
+  } else if (mouseX> 2*(width/3)) {
     for (TextBoid b : tbs) {
       int collisionID = b.collisionCheck(tbs);
       if (collisionID > 0) {
+
         b.explodeToLetters(lbs);
         tbs.get(collisionID).explodeToLetters(lbs);
         //println(collisionID);
