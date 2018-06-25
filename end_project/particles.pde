@@ -3,18 +3,21 @@ class Particles {
   PVector velocity;
   PVector acceleration;
   int radius;
-  int c = 255;
-  int opacity = 255;
-  float delta = 0.16;
+  int c;
+  int opacity;
+  float delta;
   String str; 
   int i;
   
   Particles(PVector _location,PVector _velocity,  int _radius, int _char) {
-    str = "./';8&";
+    str = "./*^*%!@#$~:>?8&";
     i = _char;
     location= _location;
     radius =_radius;
     velocity =_velocity;
+    c= 255;
+    opacity  = 255;
+    delta = 0.16;
   }
 
   void display() {
