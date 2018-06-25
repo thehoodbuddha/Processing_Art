@@ -11,7 +11,6 @@ class TextBoid
   color c;
   float theta;
   float radius; //we model each word as circles for now
-  boolean wordMode; //the mode, 1 is word mode, 0 is letters mode
   float opacity;
 
   //words start their life opaque and stationary
@@ -47,6 +46,8 @@ class TextBoid
     text(text, 0, 0);
     popMatrix();
   }
+  
+  //add force and limit it the acceleration to 2
   void addForce(PVector Force) {
     acceleration.add(Force.mult(delta));  
     acceleration.limit(2);
@@ -67,6 +68,7 @@ class TextBoid
     }
     return collisionID;
   }
+  //bounce from the walls
   void borders() {
     if (position.x>width-radius||position.x<0+radius)velocity = new PVector(velocity.x*-1, velocity.y);
     if (position.y>height-radius||position.y<0+radius)velocity = new PVector(velocity.x, velocity.y*-1);
@@ -81,7 +83,6 @@ class TextBoid
       PVector lv = velocity.copy().rotate(random(0, TWO_PI));
       leBods.add(new LetterBoid(text.charAt(i), lpos, lv, c)) ;
     }
-    wordMode = false;
     radius = 0;
   }
 

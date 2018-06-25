@@ -1,4 +1,5 @@
 /* The flocking behaviour is adapted from Shiffman's nature of code.
+
 The structure 
 */
 class LetterBoid

@@ -11,8 +11,8 @@ class TextCluster
     int currentX = 50;         //setting the starting X-point 
     int currentY = 50;         //setting the sarting Y-point
     int i = 0;                    
-    while (currentY<height-100) {
-      while (currentX<width-100 && i<=words.length-1) {
+    while (currentY<height-100) { //bottom margin is 100 pcs
+      while (currentX<width-100 && i<=words.length-1) { // right margin is 100 pcs
         PVector loc = new PVector(currentX, currentY);
         PVector vel = new PVector(0, 0);
         tbs.add(new TextBoid(words[i], loc, vel, 255));    
