@@ -77,17 +77,6 @@ class TextBoid
         collisionID = i;
       }
     }
-
-    /*
-    for (TextBoid tb : other ) {
-     float dist = PVector.dist(position, tb.position);
-     //PVector distance = position.copy().sub(other.position);
-     if ((dist>0) && dist <= 2 * radius)
-     {
-     collided = true;
-     }
-     }
-     */
     return collisionID;
   }
   void borders() {

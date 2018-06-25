@@ -1,3 +1,5 @@
+/* Code written by Anil Özen & Jan-Paul Konijn. ........ NEEDS DESCRIBTION ....... */
+import java.util.Iterator;
 String words[];
 TextCluster tc;
 String[] lines;
@@ -5,8 +7,7 @@ ArrayList<TextBoid> tbs;
 ArrayList<LetterBoid> lbs;
 ArrayList<Particles> ps;
 LetterFlock lf;
-PVector pos1, pos2;
-PVector vel1, vel2;
+
 color c1, c2;
 TextBoid tb1, tb2;
 
@@ -22,36 +23,43 @@ void setup() {
   initialize();
 }
 
-
-
 void draw() {
   background(0);
   lf.run();
   Text_Run();
   Letter_Run();
-  
-  for (Particles p : ps) {
-    p.display();
-    p.update();
-  }
+  particles_Run();
 }
 
-void initialize() {
+
+
+void particles_Run() {                 
+
+  Iterator<Particles> part = ps.iterator();         //display & update all the particles
+  while (part.hasNext()) {                          
+    Particles ps = part.next();
+    ps.display();
+    ps.update();
+    if (ps.check()) {                              //check if a particle is at it end of its life and remove
+      part.remove();
+    }
+  }
+}
+void initialize() {                                    //initilialize function calls the splitTowords function and the add_boid function. The function take all the words and add them to the arraylist
   tc.splitToWords();
   tc.add_boids();
 }
+
 void Text_Run() {
-  for (TextBoid b : tbs) {
+  for (TextBoid b : tbs) {              //loop through the arraylist, display everything
     b.display();
     b.update();
-    b.borders();
-    PVector force = new PVector(random(-0.01, 0.01), random(-0.01, 0.01));
-    force.mult(2);
-    PVector tpos = b.getPosition();
+    b.borders();                               //check the boids for the border to bounce
+    PVector force = new PVector(random(-0.01, 0.01), random(-0.01, 0.01));          //Create a starting force that will them move                                                        
+    PVector tpos = b.getPosition();       //get the currrent position                                          
     b.addForce(force);
-    b.addOpacity(noise(tpos.x, tpos.y));
-    //b.explodeToLetters();
-    b.display();
+    b.addOpacity(noise(tpos.x, tpos.y));         //let the words slowly fade in
+    b.display();                     //display all the words. 
   }
 
 
@@ -59,7 +67,6 @@ void Text_Run() {
     for (TextBoid b : tbs) {
       int collisionID = b.collisionCheck(tbs);
       if (collisionID > 0) {
-
         b.explodeToLetters(lbs);
         tbs.get(collisionID).explodeToLetters(lbs);
         //println(collisionID);
@@ -73,19 +80,17 @@ void Text_Run() {
   }
 }
 
-void add_Particle(boolean check) {
-  if (check) {
+void add_Particle(boolean check) {         //get the check if the collide
+  if (check) {                               //add 20 particles to the array
     for (int i =0; i<20; i++) {
       PVector test = new PVector(random(-2, 2), random(-2, 2));
       PVector loc=  new PVector(mouseX, mouseY);
-      ps.add(new Particles(loc, test, 2,(int)random(0,6)));
+      ps.add(new Particles(loc, test, 2, (int)random(0, 6)));
     }
   }
 }
 
 void Letter_Run() {
-
-
   for (LetterBoid lb : lbs)
   {
     lb.update();
@@ -102,16 +107,13 @@ void mousePressed() {
   {
 
     lb.click(loc);
-   add_Particle(lb.clicked());
+    add_Particle(lb.clicked());
   }
-
 }
 void mouseReleased() {
   for (LetterBoid lb : lbs)
   {
     lb.returnClick();
-     
-    
   }
 }
 void keyPressed()
