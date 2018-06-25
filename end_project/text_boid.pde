@@ -1,3 +1,6 @@
+/* A class to represent each word on screen
+ 
+ */
 class TextBoid
 {
   PVector velocity;
@@ -11,9 +14,9 @@ class TextBoid
   boolean wordMode; //the mode, 1 is word mode, 0 is letters mode
   float opacity;
 
+  //words start their life opaque and stationary
   TextBoid(String _text, PVector _position, PVector _velocity, color _c)
   {
-    wordMode = true;
     acceleration = new PVector(0, 0);
     text = _text;
     velocity = _velocity;
@@ -24,56 +27,41 @@ class TextBoid
 
     c = _c;
   }
+
   void update()
   {
-    if (wordMode)
-    {
-      velocity.add(acceleration);
-      theta =  velocity.heading2D(); //TODO deprecated, update to new version
-      position.add(velocity.copy().mult(delta));
-    }
+    velocity.add(acceleration);
+    theta =  velocity.heading(); 
+    position.add(velocity.copy().mult(delta));
   }
+
+
   void display()
   { 
-    if (wordMode)
-    {
-      textSize(12);
-      color alphaColor = color(c, opacity);
-      fill(alphaColor);
-      pushMatrix();
-      translate(position.x, position.y);
-      rotate(theta);
-      text(text, 0, 0);
-      popMatrix();
-    }
+    textSize(12);
+    color alphaColor = color(c, opacity);
+    fill(alphaColor);
+    pushMatrix();
+    translate(position.x, position.y);
+    rotate(theta);
+    text(text, 0, 0);
+    popMatrix();
   }
   void addForce(PVector Force) {
     acceleration.add(Force.mult(delta));  
     acceleration.limit(2);
   }
 
-  /*
-  void addRotation(float deltaTheta)
-   {
-   theta += deltaTheta;
-   }
-   */
 
-  void addVelocity(PVector velocity)
-  {
-  }
-
+  //returns the index number of collision within the array
   int collisionCheck(ArrayList<TextBoid> other)
   {
     int collisionID = -1;
-
     for (int i = 0; i < other.size(); i++) {
       float dist = PVector.dist(position, other.get(i).position);
       //PVector distance = position.copy().sub(other.position);
       if ((dist>0) && dist <= 2 * radius)
-      {
-      
-      
+      {      
         collisionID = i;
       }
     }
@@ -84,29 +72,17 @@ class TextBoid
     if (position.y>height-radius||position.y<0+radius)velocity = new PVector(velocity.x, velocity.y*-1);
   }
 
-  //become subparticles
+  //text boid creates letter boids on impact location
   void explodeToLetters(ArrayList<LetterBoid> leBods)
   {
-    if (wordMode)
+    for (int i = 0; i < text.length(); i++)
     {
-      for (int i = 0; i < text.length(); i++)
-      {
-        PVector lpos = position.copy().add(random(-5, 5), random(-5, 5));
-        PVector lv = velocity.copy().rotate(random(0, TWO_PI));
-        leBods.add(new LetterBoid(text.charAt(i), lpos, lv, c)) ;
-      }
-      wordMode = false;
-      radius = 0;
+      PVector lpos = position.copy().add(random(-5, 5), random(-5, 5));
+      PVector lv = velocity.copy().rotate(random(0, TWO_PI));
+      leBods.add(new LetterBoid(text.charAt(i), lpos, lv, c)) ;
     }
-  }
-
-  boolean fade(float amount) {
-    boolean remove = false;
-    opacity-=amount;
-    if (amount<=0) {
-      remove = true;
-    }
-    return remove;
+    wordMode = false;
+    radius = 0;
   }
 
   void addOpacity(float op)

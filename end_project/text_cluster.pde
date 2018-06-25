@@ -16,7 +16,7 @@ class TextCluster
         PVector loc = new PVector(currentX, currentY);
         PVector vel = new PVector(0, 0);
         tbs.add(new TextBoid(words[i], loc, vel, 255));    
-        currentX += textWidth(words[i]);                  //calculate the width of each word
+        currentX += textWidth(words[i]);   //calculate the width of each word
         currentX+= textWidth(" ");
         i++;
       }
@@ -36,7 +36,7 @@ class TextCluster
     } 
     if (lines != null) {
       String allthetext = join(lines, " ");
-      words = splitTokens(allthetext, " ,.:;/'()[]!");            //take out the unnecessary characters.
+      words = splitTokens(allthetext, " ,.:;/'()[]!"); //take out the unnecessary characters.
     }
   }
 

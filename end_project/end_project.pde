@@ -1,24 +1,26 @@
 /* Code written by Anil Özen & Jan-Paul Konijn. 
-Build & run in processing 3.3.7
-........ NEEDS DESCRIBTION ....... */
+Build & run in processing 3.3.7*/
 import java.util.Iterator;
-String words[];
-TextCluster tc;
-String[] lines;
-ArrayList<TextBoid> tbs;
-ArrayList<LetterBoid> lbs;
-ArrayList<Particles> ps;
-LetterFlock lf;
 
-color c1, c2;
-TextBoid tb1, tb2;
+
+String[] lines; //input text is split into lines 
+String words[]; //lines are split into words
+TextCluster tc; 
+
+
+ArrayList<TextBoid> tbs; //boids that contain text
+ArrayList<LetterBoid> lbs; //boids that contain single letter
+ArrayList<Particles> ps; //particles coming out of letter boids on mouse click
+LetterFlock lf; //flock of letters
 
 void setup() {
   fullScreen(P2D);
   background(255);
-  smooth(4);
+  smooth(4); //smoothin jittering on text animation 
   tc = new TextCluster("text.txt");
   lf = new LetterFlock();
+  
+  //initialize arraylist objects
   tbs = new ArrayList<TextBoid>();
   lbs = new ArrayList<LetterBoid>();
   ps = new ArrayList<Particles>();
@@ -27,16 +29,14 @@ void setup() {
 
 void draw() {
   background(0);
+  //start running flocks, text letters, particles
   lf.run();
-  Text_Run();
-  Letter_Run();
-  particles_Run();
+  textRun();
+  letterRun();
+  particlesRun();
 }
 
-
-
-void particles_Run() {                 
-
+void particlesRun() {                 
   Iterator<Particles> part = ps.iterator(); //display & update all the particles
   while (part.hasNext()) {                          
     Particles ps = part.next();
@@ -56,18 +56,19 @@ void initialize() {
   tc.add_boids();
 }
 
-void Text_Run() {
+//text has 3 different modes based on mouse position
+void textRun() {
   for (TextBoid b : tbs) {
     b.display();
     b.update();
     b.borders();
     PVector tpos = b.getPosition();
-    //b.addForce(force);
+    //if it is on left the words start to become more opaque
     b.addOpacity(noise(tpos.x, tpos.y));
-    //b.explodeToLetters();
     b.display();
   }
 
+  //if mouse is on middle they start moving around
   if (mouseX >= width/3 && mouseX <= 2*(width/3)) {
     for (TextBoid b : tbs) {
 
@@ -75,6 +76,7 @@ void Text_Run() {
       force.mult(2);
       b.addForce(force);
     }
+  // if mouse is on right they start to explode to letters on collision 
   } else if (mouseX> 2*(width/3)) {
     for (TextBoid b : tbs) {
       int collisionID = b.collisionCheck(tbs);
@@ -86,14 +88,13 @@ void Text_Run() {
         tbs.remove(b);
         tbs.remove(tbs.get(collisionID-1)); //since b is removed every index is 1 less
         break;
-        //println("success!");
       }
     }
   }
 }
 
-void add_Particle(boolean check) {         //get the check if the collide
-  if (check) {                               //add 20 particles to the array
+void addParticle(boolean check) {    //get the check if the collide
+  if (check) {                       //add 20 particles to the array
     for (int i =0; i<20; i++) {
       PVector test = new PVector(random(-2, 2), random(-2, 2));
       PVector loc=  new PVector(mouseX, mouseY);
@@ -102,7 +103,8 @@ void add_Particle(boolean check) {         //get the check if the collide
   }
 }
 
-void Letter_Run() {
+//updating and showing letters
+void letterRun() {
   for (LetterBoid lb : lbs)
   {
     lb.update();
@@ -112,14 +114,13 @@ void Letter_Run() {
   }
 }
 
-
 void mousePressed() {
   PVector loc  = new PVector(mouseX, mouseY);
   for (LetterBoid lb : lbs)
   {
 
     lb.click(loc);
-    add_Particle(lb.clicked());
+    addParticle(lb.clicked());
   }
 }
 void mouseReleased() {
@@ -128,8 +129,11 @@ void mouseReleased() {
     lb.returnClick();
   }
 }
+
+
 void keyPressed()
 {
+  //use matix movie colors
   color[] matrixColors;
   matrixColors = new color[3];
   matrixColors[0] = color(0, 143, 17);
@@ -137,7 +141,6 @@ void keyPressed()
   matrixColors[2] = color(0, 255, 65);
 
   int indice = int(random(0, 3));
-
 
   //find the characters by key press, if they are not part of flock add it to the flock. 
   //if they are already in flock, remove from the flock

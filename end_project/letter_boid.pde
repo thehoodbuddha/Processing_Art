@@ -1,3 +1,6 @@
+/* The flocking behaviour is adapted from Shiffman's nature of code.
+The structure 
+*/
 class LetterBoid
 {
   PVector velocity;
@@ -12,11 +15,9 @@ class LetterBoid
   boolean flockMode;
   boolean clicked;
 
-  boolean flyMode;
   PVector prevposition;
   float maxforce;
   float maxspeed;
-
 
   LetterBoid(char _c, PVector _position, PVector _velocity, color _col)
   {
@@ -43,13 +44,13 @@ class LetterBoid
     {
       velocity.mult(0.99);
 
-      theta =  velocity.heading2D(); //TODO deprecated, update to new version
+      theta =  velocity.heading(); 
       position.add(velocity.copy().mult(delta));
     } else
     {
       velocity.limit(maxspeed);
-      theta =  velocity.heading2D(); //TODO deprecated, update to new version
-      
+      theta =  velocity.heading(); 
+
       position.add(velocity);
       // Reset accelertion to 0 each cycle
       acceleration.mult(0);
@@ -66,13 +67,10 @@ class LetterBoid
     popMatrix();
   }
 
-
-
   void run(ArrayList<LetterBoid> boids) {
     flock(boids);
     update();
     borders();
-    //display();
   }  
 
   void applyForce(PVector force)
@@ -198,29 +196,29 @@ class LetterBoid
   }
 
 
- void click(PVector loc) {                     //to check whether a letter is clicked
+  //to check whether a letter is clicked
+  void click(PVector loc) {                     
     float d = PVector.dist(loc, position);
     if (d < r) {
       clicked = true;
       prevposition = loc;
     }
   }
+  
   void returnClick() {
     if (clicked) {
       clicked = false; 
       PVector direction = PVector.sub(prevposition, position);
       velocity.add(direction);
-      flyMode= true;
     }
   }
-  
-Boolean clicked(){
- return clicked;
-}
+
+  Boolean clicked() {
+    return clicked;
+  }
 
   void  selected(PVector loc) {
     if (clicked) {
-      flyMode = false;
       stroke(255);
       line(prevposition.x, prevposition.y, loc.x, loc.y);
       position = loc;
@@ -229,16 +227,17 @@ Boolean clicked(){
 
   //become subparticles
 
+  
   void updateColor(color newCol)
   {
     col = newCol;
   }
 
-  boolean getFlockMode(){
+  boolean getFlockMode() {
     return flockMode;
   }
 
-  void changeMode(boolean newMode){
+  void changeMode(boolean newMode) {
     flockMode = newMode;
   }
 
