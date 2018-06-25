@@ -1,4 +1,6 @@
-/* Code written by Anil Özen & Jan-Paul Konijn. ........ NEEDS DESCRIBTION ....... */
+/* Code written by Anil Özen & Jan-Paul Konijn. 
+Build & run in processing 3.3.7
+........ NEEDS DESCRIBTION ....... */
 import java.util.Iterator;
 String words[];
 TextCluster tc;
@@ -35,17 +37,21 @@ void draw() {
 
 void particles_Run() {                 
 
-  Iterator<Particles> part = ps.iterator();         //display & update all the particles
+  Iterator<Particles> part = ps.iterator(); //display & update all the particles
   while (part.hasNext()) {                          
     Particles ps = part.next();
     ps.display();
     ps.update();
-    if (ps.check()) {                              //check if a particle is at it end of its life and remove
+    
+    if (ps.check()) {  //check if a particle is at it end of its life and remove
       part.remove();
     }
   }
 }
-void initialize() {                                    //initilialize function calls the splitTowords function and the add_boid function. The function take all the words and add them to the arraylist
+
+//initilialize function calls the splitTowords function and the add_boid function. 
+//The function take all the words and add them to the arraylist
+void initialize() {  
   tc.splitToWords();
   tc.add_boids();
 }
@@ -62,8 +68,7 @@ void Text_Run() {
     b.display();
   }
 
-  if (mouseX >= width/3 && mouseX <= 2*(width/3))
-  {
+  if (mouseX >= width/3 && mouseX <= 2*(width/3)) {
     for (TextBoid b : tbs) {
 
       PVector force = new PVector(random(-0.01, 0.01), random(-0.01, 0.01));
@@ -77,7 +82,6 @@ void Text_Run() {
 
         b.explodeToLetters(lbs);
         tbs.get(collisionID).explodeToLetters(lbs);
-        //println(collisionID);
         //remove both collided items
         tbs.remove(b);
         tbs.remove(tbs.get(collisionID-1)); //since b is removed every index is 1 less
@@ -126,7 +130,6 @@ void mouseReleased() {
 }
 void keyPressed()
 {
-  //color c = color(random(0,255),random(0,255),random(0,255));
   color[] matrixColors;
   matrixColors = new color[3];
   matrixColors[0] = color(0, 143, 17);
@@ -135,6 +138,9 @@ void keyPressed()
 
   int indice = int(random(0, 3));
 
+
+  //find the characters by key press, if they are not part of flock add it to the flock. 
+  //if they are already in flock, remove from the flock
   for (LetterBoid lb : lbs)
   {
     if (key == lb.getChar() && lb.getFlockMode() == false)
